@@ -4,6 +4,11 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import dns.resolver
 import os
+import logging
+
+# Configurar logging
+logging.basicConfig(filename='app.log', level=logging.INFO, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Variável global para armazenar o DataFrame dos emails inválidos
 df_invalidos = None
@@ -23,13 +28,19 @@ nomes_invalidos = nomes_invalidos_default.copy()
 def selecionar_arquivo():
     filepath = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
     if filepath:
+        logging.info(f"Arquivo selecionado: {filepath}")
         processar_arquivo(filepath)
+    else:
+        logging.info("Nenhum arquivo selecionado")
 
 # Função para selecionar arquivo de parâmetros de exclusão
 def selecionar_parametros():
     filepath = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     if filepath:
+        logging.info(f"Parâmetros de exclusão selecionados: {filepath}")
         carregar_parametros(filepath)
+    else:
+        logging.info("Nenhum arquivo de parâmetros selecionado")
 
 # Função para carregar parâmetros de exclusão de um arquivo
 def carregar_parametros(filepath):
@@ -37,8 +48,10 @@ def carregar_parametros(filepath):
     try:
         with open(filepath, 'r', encoding='utf-8') as file:
             nomes_invalidos = [line.strip() for line in file if line.strip()]
+        logging.info("Parâmetros de exclusão carregados com sucesso")
         messagebox.showinfo("Concluído", "Parâmetros de exclusão carregados com sucesso.")
     except Exception as e:
+        logging.error(f"Erro ao carregar parâmetros: {e}")
         messagebox.showerror("Erro", f"Erro ao carregar parâmetros: {e}")
 
 # Função de validação de email
@@ -80,12 +93,15 @@ def processar_arquivo(filepath):
     try:
         # Tentar carregar dados do CSV com encoding padrão (utf-8)
         df = pd.read_csv(filepath, sep=';', encoding='utf-8')
+        logging.info("Arquivo carregado com encoding utf-8")
     except UnicodeDecodeError:
         # Se falhar, tentar com encoding 'latin1'
         df = pd.read_csv(filepath, sep=';', encoding='latin1')
+        logging.info("Arquivo carregado com encoding latin1")
     
     # Verificar se a coluna 'Email' existe
     if 'Email' not in df.columns:
+        logging.warning("A coluna 'Email' não foi encontrada na planilha")
         messagebox.showwarning("Aviso", "A coluna 'Email' não foi encontrada na planilha.")
         return
 
@@ -106,6 +122,7 @@ def processar_arquivo(filepath):
 
     # Salvar resultados em um novo CSV
     df_validos.to_csv(output_filepath, sep=';', index=False)
+    logging.info(f"Resultados salvos em {output_filepath}")
     messagebox.showinfo("Concluído", f"Resultados salvos em {output_filepath}")
 
 # Função para salvar emails inválidos
@@ -116,8 +133,10 @@ def salvar_invalidos():
         output_filepath = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")], initialfile='Retorno_Inválidos.csv')
         if output_filepath:
             df_invalidos.to_csv(output_filepath, sep=';', index=False)
+            logging.info(f"Emails inválidos salvos em {output_filepath}")
             messagebox.showinfo("Concluído", f"Emails inválidos salvos em {output_filepath}")
     else:
+        logging.warning("Nenhum dado de email inválido encontrado. Por favor, processe um arquivo primeiro.")
         messagebox.showwarning("Aviso", "Nenhum dado de email inválido encontrado. Por favor, processe um arquivo primeiro.")
 
 # Criar interface gráfica
