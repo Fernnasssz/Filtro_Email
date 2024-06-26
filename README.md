@@ -26,15 +26,15 @@ O projeto utiliza uma abordagem de interface gráfica para facilitar a interaç�
 ## Como Usar
 1. Clone o repositório:
 
-git clone https://github.com/seu-usuario/nome-do-repositorio.git
+    git clone https://github.com/seu-usuario/nome-do-repositorio.git
 
 2. Instale as dependências necessárias:
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
 3. Execute o arquivo principal da aplicação:
 
-python FiltroEmail.py
+    python FiltroEmail.py
 
 4. Selecione um arquivo CSV para processar e utilize as funcionalidades disponíveis na interface gráfica.
 
