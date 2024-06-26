@@ -9,18 +9,37 @@ import os
 df_invalidos = None
 
 # Lista de nomes/dominios inválidos
-nomes_invalidos = [
+nomes_invalidos_default = [
     'grupoab', 'sememail', 'naotem', 'yahoo.com.br', 'bol.com.br', 'ymail', 'terra.com.br',
     'gmail.com.br', 'hotmail.com.br', 'nt@gmail', 'nt@hotmail', 'nao@tem', 'naopossui',
     'uol.com.br', 'ig.com.br', 'naoinformado', 'padrao', 'nao', 'sem', 'gnail', 'naosei',
     'coim', 'lymail', 'me.com', 'montadoras', 'bool', 'yhaoo', 'lwmail', 'gamil'
 ]
 
+# Variável para armazenar nomes/dominios inválidos customizados
+nomes_invalidos = nomes_invalidos_default.copy()
+
 # Função para selecionar arquivo
 def selecionar_arquivo():
     filepath = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
     if filepath:
         processar_arquivo(filepath)
+
+# Função para selecionar arquivo de parâmetros de exclusão
+def selecionar_parametros():
+    filepath = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+    if filepath:
+        carregar_parametros(filepath)
+
+# Função para carregar parâmetros de exclusão de um arquivo
+def carregar_parametros(filepath):
+    global nomes_invalidos
+    try:
+        with open(filepath, 'r', encoding='utf-8') as file:
+            nomes_invalidos = [line.strip() for line in file if line.strip()]
+        messagebox.showinfo("Concluído", "Parâmetros de exclusão carregados com sucesso.")
+    except Exception as e:
+        messagebox.showerror("Erro", f"Erro ao carregar parâmetros: {e}")
 
 # Função de validação de email
 def validar_email(email):
@@ -64,17 +83,14 @@ def processar_arquivo(filepath):
     except UnicodeDecodeError:
         # Se falhar, tentar com encoding 'latin1'
         df = pd.read_csv(filepath, sep=';', encoding='latin1')
-    except Exception as e:
-        messagebox.showerror("Erro ao ler o arquivo", f"Erro: {str(e)}")
-        return
     
-    # Remover linhas onde o campo 'Email' esteja vazio
-    df = df.dropna(subset=['Email'])
-
     # Verificar se a coluna 'Email' existe
     if 'Email' not in df.columns:
         messagebox.showwarning("Aviso", "A coluna 'Email' não foi encontrada na planilha.")
         return
+
+    # Remover linhas com valores vazios na coluna 'Email'
+    df = df.dropna(subset=['Email'])
 
     # Aplicar a função de validação aos emails
     df['valido'] = df['Email'].apply(lambda x: validar_email(x) and verificar_nomes_invalidos(x))
@@ -109,7 +125,7 @@ root = tk.Tk()
 root.title("Validador de Emails")
 
 # Configurar o tamanho da janela
-root.geometry("400x300")
+root.geometry("400x350")
 
 # Definir cor de fundo
 root.configure(bg='#f0f0f0')
@@ -124,6 +140,9 @@ frame.pack(expand=True)
 
 btn_selecionar = tk.Button(frame, text="Selecionar Planilha CSV", command=selecionar_arquivo, font=("Helvetica", 12))
 btn_selecionar.pack(pady=10)
+
+btn_parametros = tk.Button(frame, text="Selecionar Parâmetros de Exclusão", command=selecionar_parametros, font=("Helvetica", 12))
+btn_parametros.pack(pady=10)
 
 btn_lista_retorno = tk.Button(frame, text="Lista de Retorno", command=salvar_invalidos, font=("Helvetica", 12))
 btn_lista_retorno.pack(pady=10)
