@@ -1,0 +1,19 @@
+2024-06-26 14:56:56,635 - INFO - Parâmetros de exclusão restaurados para o padrão.
+2024-06-26 14:57:14,069 - INFO - Arquivo selecionado: C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes/ABINTERCAR-NBS.csv
+2024-06-26 14:57:14,103 - WARNING - A coluna 'Email' não foi encontrada na planilha.
+2024-06-26 15:04:13,163 - INFO - Parâmetros de exclusão restaurados para o padrão.
+2024-06-26 15:04:16,708 - INFO - Parâmetros de exclusão selecionados: C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes/Parametros de Filtro.txt
+2024-06-26 15:04:16,708 - INFO - Parâmetros de exclusão carregados com sucesso
+2024-06-26 15:04:20,974 - INFO - Arquivo selecionado: C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes/Lista-Bloqueada-Mercedes.csv
+2024-06-26 15:12:15,257 - INFO - Arquivo selecionado: C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes/Lista-Bloqueada-Mercedes.csv
+2024-06-26 15:12:15,388 - INFO - Arquivo carregado com sucesso usando encoding 'utf-8' e separador ','
+2024-06-26 15:14:30,276 - INFO - Nenhum arquivo selecionado
+2024-06-26 15:14:32,026 - INFO - Parâmetros de exclusão selecionados: C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes/Parametros de Filtro.txt
+2024-06-26 15:14:32,026 - INFO - Parâmetros de exclusão carregados com sucesso
+2024-06-26 15:14:35,494 - INFO - Arquivo selecionado: C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes/Lista-Bloqueada-Mercedes.csv
+2024-06-26 15:14:35,612 - INFO - Arquivo carregado com sucesso usando encoding 'utf-8' e separador ','
+2024-06-26 15:17:09,359 - INFO - Parâmetros de exclusão selecionados: C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes/Parametros de Filtro.txt
+2024-06-26 15:17:09,359 - INFO - Parâmetros de exclusão carregados com sucesso
+2024-06-26 15:17:13,719 - INFO - Arquivo selecionado: C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes/Lista-Bloqueada-Mercedes.csv
+2024-06-26 15:17:13,844 - INFO - Arquivo carregado com sucesso usando encoding 'utf-8' e separador ','
+2024-06-26 15:22:13,897 - INFO - Resultados salvos em C:/Users/daniel.fernandes/Desktop/Mailing/NBS/Mercedes\Lista-Bloqueada-Mercedes_Atualizado.csv

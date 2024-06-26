@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
 import dns.resolver
 import os
 import logging
@@ -90,26 +90,45 @@ def verificar_nomes_invalidos(email):
 # Função para processar o arquivo
 def processar_arquivo(filepath):
     global df_invalidos
-    try:
-        # Tentar carregar dados do CSV com encoding padrão (utf-8)
-        df = pd.read_csv(filepath, sep=';', encoding='utf-8')
-        logging.info("Arquivo carregado com encoding utf-8")
-    except UnicodeDecodeError:
-        # Se falhar, tentar com encoding 'latin1'
-        df = pd.read_csv(filepath, sep=';', encoding='latin1')
-        logging.info("Arquivo carregado com encoding latin1")
+    encodings = ['utf-8', 'latin1']
+    separators = [';', ',', '\t']
+
+    for encoding in encodings:
+        for sep in separators:
+            try:
+                df = pd.read_csv(filepath, sep=sep, encoding=encoding)
+                logging.info(f"Arquivo carregado com sucesso usando encoding '{encoding}' e separador '{sep}'")
+                break
+            except (UnicodeDecodeError, pd.errors.ParserError):
+                continue
+        else:
+            continue
+        break
+    else:
+        logging.error("Erro ao carregar o arquivo com os encodings e separadores tentados.")
+        messagebox.showerror("Erro", "Erro ao carregar o arquivo. Verifique o formato do arquivo.")
+        return
     
     # Verificar se a coluna 'Email' existe
     if 'Email' not in df.columns:
-        logging.warning("A coluna 'Email' não foi encontrada na planilha")
+        logging.warning("A coluna 'Email' não foi encontrada na planilha.")
         messagebox.showwarning("Aviso", "A coluna 'Email' não foi encontrada na planilha.")
         return
-
+    
     # Remover linhas com valores vazios na coluna 'Email'
-    df = df.dropna(subset=['Email'])
+    df.dropna(subset=['Email'], inplace=True)
+
+    # Iniciar a barra de progresso
+    progress_bar['maximum'] = len(df)
+    progress_bar['value'] = 0
 
     # Aplicar a função de validação aos emails
     df['valido'] = df['Email'].apply(lambda x: validar_email(x) and verificar_nomes_invalidos(x))
+
+    # Atualizar a barra de progresso
+    for i, row in df.iterrows():
+        progress_bar['value'] = i + 1
+        root.update_idletasks()
 
     # Filtrar emails válidos e inválidos
     df_validos = df[df['valido'] == True].drop(columns=['valido'])
@@ -165,5 +184,9 @@ btn_parametros.pack(pady=10)
 
 btn_lista_retorno = tk.Button(frame, text="Lista de Retorno", command=salvar_invalidos, font=("Helvetica", 12))
 btn_lista_retorno.pack(pady=10)
+
+# Adicionar barra de progresso
+progress_bar = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
+progress_bar.pack(pady=20)
 
 root.mainloop()
